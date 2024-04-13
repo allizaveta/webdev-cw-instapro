@@ -130,4 +130,24 @@ const renderApp = () => {
   }
 };
 
+export function renderPostsList({ appEl, posts }) {
+  appEl.innerHTML = "";
+  const postsHTML = posts.map((post) => `
+    <div class="post">
+      <div class="post-header">
+        <img class="post-header__user-image" src="${post.userImage}" alt="User Image">
+        <span class="user-name">${post.userName}</span>
+      </div>
+      <div class="post-image-container">
+        <img class="post-image" src="${post.imageUrl}" alt="Post Image">
+      </div>
+      <div class="post-likes">
+        <button class="like-button">Like</button>
+      </div>
+      <p class="post-text">${post.description}</p>
+    </div>
+  `).join("");
+  appEl.innerHTML = postsHTML;
+};
+
 goToPage(POSTS_PAGE);
