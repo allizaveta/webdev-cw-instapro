@@ -1,4 +1,4 @@
-import { USER_POSTS_PAGE } from "../routes.js";
+import { USER_POSTS_PAGE, POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
 import { goToPage } from "../index.js";
 
@@ -6,7 +6,6 @@ import { goToPage } from "../index.js";
 export function renderPostsPageComponent({ appEl, posts }) {
   const renderPost = (post) => {
     console.log("Актуальный список постов:", posts);
-    
     /**
      * TODO: чтобы отформатировать дату создания поста в виде "19 минут назад"
      * можно использовать https://date-fns.org/v2.29.3/docs/formatDistanceToNow

@@ -1,4 +1,11 @@
+import { escapeHTML } from "../helpers.js";
+import { getToken } from "../index.js";
+import { renderHeaderComponent } from "./header-component.js";
+import { renderUploadImageComponent } from "./upload-image-component.js";
+
+
 export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
+  let imageUrl = '';
   const render = () => {
     const appHtml = `
     <div class="page-container">
@@ -25,13 +32,37 @@ export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
 
     appEl.innerHTML = appHtml;
 
+    renderHeaderComponent({
+      element: document.querySelector(".header-container"),
+    });
+
+
     document.getElementById("add-button").addEventListener("click", () => {
-      onAddPostClick({
-        description: "Описание картинки",
-        imageUrl: "https://image.png",
-      });
+      const description = document.getElementById('textarea-input');
+      if (description.value === "") {
+        alert('Заполни поле');
+      } else if (!imageUrl) {
+        alert('Добавь фотографию');
+      } else {
+        onAddPostClick({
+          token: getToken(),
+          description: sanitizeHtml(description.value),
+          imageUrl,
+        });
+      }
     });
   };
+
+  const uploadImageContainer = appEl.querySelector(".upload-image-container");
+
+  if (uploadImageContainer) {
+    renderUploadImageComponent({
+      element: appEl.querySelector(".upload-image-container"),
+      onImageUrlChange(newImageUrl) {
+        imageUrl = newImageUrl;
+      },
+    });
+  }
 
   render();
 }
