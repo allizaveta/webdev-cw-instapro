@@ -1,9 +1,9 @@
-import { escapeHTML } from "../helpers.js";
 import { getToken } from "../index.js";
 import { renderHeaderComponent } from "./header-component.js";
 import { renderUploadImageComponent } from "./upload-image-component.js";
+import { addPost } from "../api.js";
 
-export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
+export function renderAddPostPageComponent({ appEl }) {
   let imageUrl = '';
 
   const render = () => {
@@ -41,13 +41,22 @@ export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
       } else if (!imageUrl) {
         alert('Добавьте фотографию');
       } else {
-        onAddPostClick({
-          token: getToken(),
-          description: description.value,
-          imageUrl,
-        });
+        addPostToAPI(description.value, imageUrl);
       }
     });
+  };
+
+  const addPostToAPI = (description, imageUrl) => {
+    addPost({ description, imageUrl, token: getToken() })
+      .then(() => {
+        // После успешного добавления поста можно выполнить какие-то дополнительные действия, например, перейти на страницу с постами
+        console.log("Пост успешно добавлен.");
+        // Дополнительные действия после добавления поста
+      })
+      .catch((error) => {
+        console.error("Ошибка при добавлении поста:", error);
+        alert("Произошла ошибка при добавлении поста. Пожалуйста, попробуйте еще раз.");
+      });
   };
 
   render();
