@@ -1,7 +1,7 @@
 import { getToken } from "./index.js";
 
-// const personalKey = "elizaveta-aleksandrova";
-const personalKey = "prod";
+const personalKey = "elizaveta-aleksandrova";
+// const personalKey = "prod";
 const baseHost = "https://webdev-hw-api.vercel.app";
 const postsHost = `${baseHost}/api/v1/${personalKey}/instapro`;
 

@@ -1,7 +1,8 @@
-import { getToken } from "../index.js";
+import { getToken,goToPage } from "../index.js";
 import { renderHeaderComponent } from "./header-component.js";
 import { renderUploadImageComponent } from "./upload-image-component.js";
 import { addPost } from "../api.js";
+import { POSTS_PAGE } from "../routes.js";
 
 export function renderAddPostPageComponent({ appEl }) {
   let imageUrl = '';
@@ -52,6 +53,7 @@ export function renderAddPostPageComponent({ appEl }) {
         // После успешного добавления поста можно выполнить какие-то дополнительные действия, например, перейти на страницу с постами
         console.log("Пост успешно добавлен.");
         // Дополнительные действия после добавления поста
+        goToPage(POSTS_PAGE);
       })
       .catch((error) => {
         console.error("Ошибка при добавлении поста:", error);
