@@ -19,7 +19,7 @@ export function renderUserPageComponent({ appEl, posts }) {
       const postHtml = `
         <li class="post">
           <div class="post-header" data-user-id="${post.user.id}">
-            <div class="user-info-container"></div> <!-- Здесь будет отображаться имя и фото пользователя -->
+            <div class="user-info-container"></div>
           </div>
           <div class="post-image-container">
             <img class="post-image" src="${post.imageUrl}">
