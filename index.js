@@ -1,4 +1,4 @@
-import { getPosts, getUserPosts } from "./api.js";
+import { getPosts, getUserPosts,likeButton } from "./api.js";
 import { renderUserPageComponent } from "./components/user-poset-component.js";
 import { renderAddPostPageComponent } from "./components/add-post-page-component.js";
 import { renderAuthPageComponent } from "./components/auth-page-component.js";
@@ -69,7 +69,6 @@ export const goToPage = (newPage, data) => {
 
     if (newPage === USER_POSTS_PAGE) {
       // TODO: реализовать получение постов юзера из API
-      console.log("Открываю страницу пользователя: ", data.userId);
       return getUserPosts({id: data.userId})
       .then((newPosts) => {
         page = USER_POSTS_PAGE;
@@ -86,7 +85,6 @@ export const goToPage = (newPage, data) => {
 
     return;
   }
-
   throw new Error("страницы не существует");
 };
 
@@ -118,7 +116,6 @@ const renderApp = () => {
       appEl,
       onAddPostClick({ description, imageUrl }) {
         // TODO: реализовать добавление поста в API
-        console.log("Добавляю пост...", { description, imageUrl });
         goToPage(POSTS_PAGE);
       },
     });

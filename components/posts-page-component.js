@@ -5,7 +5,6 @@ import { escapeHTML } from "../helpers.js";
 
 export function renderPostsPageComponent({ appEl, posts }) {
   const renderPost = (post) => {
-    console.log("Актуальный список постов:", posts);
     /**
      * TODO: чтобы отформатировать дату создания поста в виде "19 минут назад"
      * можно использовать https://date-fns.org/v2.29.3/docs/formatDistanceToNow
