@@ -95,3 +95,57 @@ export function getUserPosts({id}) {
     return data.posts;
   });
 }
+
+export function addLikeToAPI(postId) {
+  const url = `${postsHost} + /posts/${postId}/likes`;
+  const userId = getUserFromLocalStorage().id;
+  const data = { userId, name: 'Админ' }; // Можно заменить на имя пользователя или получить его из данных пользователя
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  };
+
+  const response = fetch(url, options);
+  if (!response.ok) {
+    throw new Error('Не получилось поставить лайк');
+  }
+}
+
+export function deleteLikeFromAPI(postId) {
+  const url = `your_api_endpoint/posts/${postId}/likes`;
+  const userId = getUserFromLocalStorage().id;
+
+  const options = {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ userId }),
+  };
+
+  const response = fetch(url, options);
+  if (!response.ok) {
+    throw new Error('Не получилось удалить лайк');
+  }
+}
+
+export function like({token,postId, likePosition}) {
+  return fetch(postsHost + "/" + postId + "/" + likePosition, {
+    method: "POST",
+    headers: {
+      Authorization: token,
+    }
+  }).then((response) => {
+    if (response.status === 401) {
+      throw new Error("Нет авторизации");
+    }
+
+    return response.json();
+  })
+  .then((data) => {
+    return data.post;
+  });
+}

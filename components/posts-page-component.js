@@ -1,7 +1,8 @@
-import { USER_POSTS_PAGE } from "../routes.js";
+import { USER_POSTS_PAGE, POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
-import { goToPage } from "../index.js";
+import { goToPage, getToken } from "../index.js";
 import { escapeHTML } from "../helpers.js";
+import { like } from "../api.js";
 
 export function renderPostsPageComponent({ appEl, posts }) {
   const renderPost = (post, index) => {
@@ -63,4 +64,32 @@ export function renderPostsPageComponent({ appEl, posts }) {
       });
     });
   });
+  likeButton();
+}
+
+function likeButton() {
+  for (let likesButtons of document.querySelectorAll(".like-button")) {
+    likesButtons.addEventListener("click", () => {
+      const postId = likesButtons.dataset.id
+
+      const likePosition = (likesButtons.dataset.like == "true") ? "dislike" : "like";
+
+      like({token: getToken(), postId, likePosition})
+      .then((post) => {
+        const likeItem = document.getElementById(post.id)
+        const likePosition = post.isLiked
+        let likeSvg = likePosition ? "like-active.svg" : "like-not-active.svg";
+        likeItem.innerHTML = `
+        <div id="${post.id}" class="post-likes">
+          <button data-id="${post.id}" data-like="${post.isLiked}" class="like-button">
+            <img src="./assets/images/${likeSvg}">
+          </button>
+          <p class="post-likes-text">
+            Нравится: <strong>${post.likes.length}</strong>
+          </p>
+        </div>`;
+      likeButton();
+      })
+    });
+  }
 }
