@@ -2,13 +2,10 @@ import { USER_POSTS_PAGE, POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
 import { goToPage } from "../index.js";
 import { escapeHTML } from "../helpers.js";
+import { likeButton } from "../api.js";
 
 export function renderPostsPageComponent({ appEl, posts }) {
-  const renderPost = (post) => {
-    /**
-     * TODO: чтобы отформатировать дату создания поста в виде "19 минут назад"
-     * можно использовать https://date-fns.org/v2.29.3/docs/formatDistanceToNow
-     */
+  const renderPost = (post, index) => {
     const postHtml = `
       <li class="post">
         <div class="post-header" data-user-id="${post.user.id}">
@@ -42,9 +39,6 @@ export function renderPostsPageComponent({ appEl, posts }) {
     const date = new Date(dateString);
     const now = new Date();
     const diffInMs = now - date;
-    // Логика форматирования даты, например, "19 минут назад"
-    // Можно использовать библиотеку date-fns для этого
-    // Но для примера я оставлю простое форматирование
     return `${Math.round(diffInMs / (1000 * 60))} минут назад`;
   };
 
@@ -58,15 +52,42 @@ export function renderPostsPageComponent({ appEl, posts }) {
 
   appEl.innerHTML = appHtml;
 
-  renderHeaderComponent({
-    element: document.querySelector(".header-container"),
+  // Обработчик события для кнопки лайка
+  appEl.querySelectorAll(".like-button").forEach((likeButtonElement, index) => {
+    likeButtonElement.addEventListener("click", async () => {
+      try {
+        const updatedPost = await likeButton({ posts, index });
+        // Обновление интерфейса после успешного лайка
+        updateLikeButtonState(likeButtonElement, updatedPost.isLiked);
+        // Дополнительные действия после успешного лайка, если нужно
+      } catch (error) {
+        console.error("Ошибка при лайке поста:", error);
+        // Обработка ошибки, если нужно
+      }
+    });
   });
 
-  for (let userEl of document.querySelectorAll(".post-header")) {
-    userEl.addEventListener("click", () => {
+  // Рендеринг шапки страницы
+  renderHeaderComponent({
+    element: appEl.querySelector(".header-container"),
+  });
+
+  // Обработчики событий для клика по заголовку поста
+  appEl.querySelectorAll(".post-header").forEach((postHeaderElement) => {
+    postHeaderElement.addEventListener("click", () => {
       goToPage(USER_POSTS_PAGE, {
-        userId: userEl.dataset.userId,
+        userId: postHeaderElement.dataset.userId,
       });
     });
-  }
+  });
 }
+
+const updateLikeButtonState = (buttonElement, isLiked) => {
+  if (isLiked) {
+    buttonElement.classList.add("like-active");
+    buttonElement.querySelector("img").src = "./assets/images/like-active.svg";
+  } else {
+    buttonElement.classList.remove("like-active");
+    buttonElement.querySelector("img").src = "./assets/images/like-not-active.svg";
+  }
+};
