@@ -1,3 +1,4 @@
+
 import { getToken } from "./index.js";
 import { getUserFromLocalStorage } from "./helpers.js";
 const personalKey = "elizaveta-aleksandrova";
@@ -96,42 +97,6 @@ export function getUserPosts({id}) {
   });
 }
 
-export function addLikeToAPI(postId) {
-  const url = `${postsHost} + /posts/${postId}/likes`;
-  const userId = getUserFromLocalStorage().id;
-  const data = { userId, name: 'Админ' }; // Можно заменить на имя пользователя или получить его из данных пользователя
-  const options = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-  };
-
-  const response = fetch(url, options);
-  if (!response.ok) {
-    throw new Error('Не получилось поставить лайк');
-  }
-}
-
-export function deleteLikeFromAPI(postId) {
-  const url = `your_api_endpoint/posts/${postId}/likes`;
-  const userId = getUserFromLocalStorage().id;
-
-  const options = {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ userId }),
-  };
-
-  const response = fetch(url, options);
-  if (!response.ok) {
-    throw new Error('Не получилось удалить лайк');
-  }
-}
-
 export function like(postId) {
   const token = getToken();
   const url = `${postsHost}/${postId}/like`;
@@ -179,7 +144,6 @@ export function unlikePost(postId) {
     });
 }
 
-// Функция для получения ID текущего пользователя из localStorage или другого источника
 export function getUserId() {
   const user = getUserFromLocalStorage(); 
   if (user) {

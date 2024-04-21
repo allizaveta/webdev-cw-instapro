@@ -50,14 +50,11 @@ export function renderAddPostPageComponent({ appEl }) {
   const addPostToAPI = (description, imageUrl) => {
     addPost({ description, imageUrl, token: getToken() })
       .then(() => {
-        // После успешного добавления поста можно выполнить какие-то дополнительные действия, например, перейти на страницу с постами
-        console.log("Пост успешно добавлен.");
-        // Дополнительные действия после добавления поста
         goToPage(POSTS_PAGE);
       })
       .catch((error) => {
         console.error("Ошибка при добавлении поста:", error);
-        alert("Произошла ошибка при добавлении поста. Пожалуйста, попробуйте еще раз.");
+        alert("Произошла ошибка при добавлении поста. ");
       });
   };
 
