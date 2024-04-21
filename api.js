@@ -1,5 +1,5 @@
 import { getToken } from "./index.js";
-
+import { getUserFromLocalStorage } from "./helpers.js";
 const personalKey = "elizaveta-aleksandrova";
 const baseHost = "https://webdev-hw-api.vercel.app";
 const postsHost = `${baseHost}/api/v1/${personalKey}/instapro`;
@@ -132,20 +132,65 @@ export function deleteLikeFromAPI(postId) {
   }
 }
 
-export function like({token,postId, likePosition}) {
-  return fetch(postsHost + "/" + postId + "/" + likePosition, {
-    method: "POST",
-    headers: {
-      Authorization: token,
-    }
-  }).then((response) => {
-    if (response.status === 401) {
-      throw new Error("Нет авторизации");
-    }
+export function like(postId) {
+  const token = getToken();
+  const url = `${postsHost}/${postId}/like`;
+  const data = { userId: getUserId(), username: getUsername() };
 
-    return response.json();
-  })
-  .then((data) => {
-    return data.post;
-  });
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: token,
+    },
+    body: JSON.stringify(data),
+  };
+
+  return fetch(url, options)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Failed to like the post');
+      }
+      return response.json();
+    })
+    .then((data) => {
+      return data.post;
+    });
+}
+
+export function unlikePost(postId) {
+  const token = getToken();
+  const url = `${postsHost}/${postId}/like`;
+  const userId = getUserId();
+  const options = {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: token,
+    },
+    body: JSON.stringify({ userId }),
+  };
+
+  return fetch(url, options)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Failed to remove the like');
+      }
+    });
+}
+
+// Функция для получения ID текущего пользователя из localStorage или другого источника
+export function getUserId() {
+  const user = getUserFromLocalStorage(); 
+  if (user) {
+    return user.id;
+  } else {
+    throw new Error('Пользователь не авторизован');
+  }
+}
+
+export function getUsername() {
+  const userString = localStorage.getItem('user');
+  const user = JSON.parse(userString);
+  return user ? user.username : null;
 }

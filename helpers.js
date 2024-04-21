@@ -21,3 +21,36 @@ export const escapeHTML = (htmlString) => {
     '"', "&quot;", "&lt;", "<", 
     "&gt;", ">", "&amp;", "&", '&quot;', "");
 };
+
+
+import { like, unlikePost } from './api.js';
+
+export function handleLike(postId, isLiked) {
+  if (isLiked) {
+    unlikePost(postId)
+      .then((post) => {
+        updatePostLikes(postId, post.likes);
+      })
+      .catch((error) => {
+        console.error('Ошибка при дизлайке:', error);
+      });
+  } else {
+    like(postId)
+      .then((post) => {
+        updatePostLikes(postId, post.likes);
+      })
+      .catch((error) => {
+        console.error('Ошибка при лайке:', error);
+      });
+  }
+}
+
+function updatePostLikes(postId, likes) {
+  const postElement = document.getElementById(postId);
+  if (postElement) {
+    const likesCountElement = postElement.querySelector('.post-likes-text strong');
+    if (likesCountElement) {
+      likesCountElement.textContent = likes.length.toString();
+    }
+  }
+}
