@@ -1,8 +1,7 @@
-import { USER_POSTS_PAGE, POSTS_PAGE } from "../routes.js";
+import { USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
 import { goToPage } from "../index.js";
 import { escapeHTML } from "../helpers.js";
-import { likeButton } from "../api.js";
 
 export function renderPostsPageComponent({ appEl, posts }) {
   const renderPost = (post, index) => {
@@ -52,22 +51,6 @@ export function renderPostsPageComponent({ appEl, posts }) {
 
   appEl.innerHTML = appHtml;
 
-  // Обработчик события для кнопки лайка
-  appEl.querySelectorAll(".like-button").forEach((likeButtonElement, index) => {
-    likeButtonElement.addEventListener("click", async () => {
-      try {
-        const updatedPost = await likeButton({ posts, index });
-        // Обновление интерфейса после успешного лайка
-        updateLikeButtonState(likeButtonElement, updatedPost.isLiked);
-        // Дополнительные действия после успешного лайка, если нужно
-      } catch (error) {
-        console.error("Ошибка при лайке поста:", error);
-        // Обработка ошибки, если нужно
-      }
-    });
-  });
-
-  // Рендеринг шапки страницы
   renderHeaderComponent({
     element: appEl.querySelector(".header-container"),
   });
@@ -81,13 +64,3 @@ export function renderPostsPageComponent({ appEl, posts }) {
     });
   });
 }
-
-const updateLikeButtonState = (buttonElement, isLiked) => {
-  if (isLiked) {
-    buttonElement.classList.add("like-active");
-    buttonElement.querySelector("img").src = "./assets/images/like-active.svg";
-  } else {
-    buttonElement.classList.remove("like-active");
-    buttonElement.querySelector("img").src = "./assets/images/like-not-active.svg";
-  }
-};

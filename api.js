@@ -95,25 +95,3 @@ export function getUserPosts({id}) {
     return data.posts;
   });
 }
-
-export function likeButton({ posts, index }) {
-  return fetch(postsHost + `/${posts[index].id}/like`, {
-    method: "POST",
-    body: JSON.stringify(
-      {
-        likes: {id: posts[index].user.id, name: posts[index].user.name,},
-        isLiked: posts.isLiked,
-      }
-    ),
-    headers: {
-      Authorization: getToken(),
-    },
-  })
-  .then((response) => {
-    return response.json();
-  })
-}
-
-export function name(params) {
-
-}
