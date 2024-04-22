@@ -75,6 +75,11 @@ export function renderPostsPageComponent({ appEl, posts }) {
         });
     });
   });
+  appEl.querySelectorAll(".post-header").forEach((postHeaderElement) => {
+    const userId = postHeaderElement.dataset.userId; 
+    handlePostHeaderClick(postHeaderElement, userId); 
+  });
+
 }
 
 function updateLikeButton(postId, isLiked) {
@@ -89,3 +94,9 @@ function updateLikeButton(postId, isLiked) {
     likeButton.dataset.liked = isLiked ? 'true' : 'false'; 
   }
 }
+
+const handlePostHeaderClick = (postHeaderElement, userId) => {
+  postHeaderElement.addEventListener("click", () => {
+    goToPage(USER_POSTS_PAGE, { userId }); 
+  });
+};
