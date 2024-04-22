@@ -6,6 +6,17 @@
   export function renderPostsPageComponent({ appEl, posts }) {
     const renderPost = (post) => {
       const isLiked = post.isLiked ? 'true' : 'false'; 
+      const likesCount = post.likes.length; // Количество лайков
+  
+      let likesText = "Нравится:";
+      if (likesCount === 0) {
+        likesText += " 0";
+      } else if (likesCount === 1) {
+        likesText += ` ${escapeHTML(post.likes[0].name)}`;
+      } else {
+        likesText += ` ${escapeHTML(post.likes[0].name)} и еще ${likesCount - 1}`;
+      }
+  
       const postHtml = `
         <li class="post">
           <div class="post-header" data-user-id="${post.user.id}">
@@ -20,7 +31,7 @@
               <img src="./assets/images/${post.isLiked ? 'like-active' : 'like-not-active'}.svg">
             </button>
             <p class="post-likes-text">
-              Нравится: <strong>${post.likes.map(user => user.name).join(', ')}</strong>
+              ${likesText}
             </p>
           </div>
           <p class="post-text">
