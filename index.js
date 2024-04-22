@@ -26,6 +26,7 @@ export const getToken = () => {
   return token;
 };
 
+let userView;
 export const logout = () => {
   user = null;
   removeUserFromLocalStorage();

@@ -1,11 +1,12 @@
 import { USER_POSTS_PAGE, POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
-import { goToPage, getToken } from "../index.js";
+import { goToPage } from "../index.js";
 import { escapeHTML, handleLike } from "../helpers.js";
-import { like, getUserId } from "../api.js";
+import { getDislike, getLike } from "../api.js";
 
 export function renderPostsPageComponent({ appEl, posts }) {
   const renderPost = (post, index) => {
+    const isLiked = post.isLiked ? 'true' : 'false'; 
     const postHtml = `
       <li class="post">
         <div class="post-header" data-user-id="${post.user.id}">
@@ -16,8 +17,8 @@ export function renderPostsPageComponent({ appEl, posts }) {
           <img class="post-image" src="${post.imageUrl}">
         </div>
         <div class="post-likes">
-          <button data-post-id="${post.id}" class="like-button">
-            <img src="./assets/images/like-active.svg">
+          <button data-post-id="${post.id}" data-liked="${isLiked}" class="like-button">
+            <img src="./assets/images/${post.isLiked ? 'like-active' : 'like-not-active'}.svg"> <!-- Изменяем путь к изображению в зависимости от лайка -->
           </button>
           <p class="post-likes-text">
             Нравится: <strong>${post.likes}</strong>
@@ -56,24 +57,35 @@ export function renderPostsPageComponent({ appEl, posts }) {
     element: appEl.querySelector(".header-container"),
   });
 
-  // Обработчики событий для клика по заголовку поста
-  appEl.querySelectorAll(".post-header").forEach((postHeaderElement) => {
-    postHeaderElement.addEventListener("click", () => {
-      goToPage(USER_POSTS_PAGE, {
-        userId: postHeaderElement.dataset.userId,
-      });
+  // Обработчики событий для клика по кнопке лайка
+  const likesButtons = appEl.querySelectorAll('.like-button');
+  likesButtons.forEach((button) => {
+    button.addEventListener("click", (event) => {
+      event.stopPropagation();
+
+      const id = button.dataset.postId;
+      const isLiked = button.dataset.liked === 'true'; 
+
+      handleLike(id, isLiked)
+        .then((updatedPost) => {
+          updateLikeButton(id, isLiked);
+        })
+        .catch((error) => {
+          console.error("Ошибка при обработке лайка:", error);
+        });
     });
   });
-  handleLikeButton();
 }
 
-function handleLikeButton() {
-  for (const likeButton of document.querySelectorAll('.like-button')) {
-    likeButton.addEventListener('click', () => {
-      const postId = likeButton.dataset.postId;
-      const isLiked = likeButton.dataset.isLiked === 'true';
-
-      handleLike(postId, isLiked);
-    });
+function updateLikeButton(postId, isLiked) {
+  const likeButton = document.querySelector(`[data-post-id="${postId}"]`);
+  if (likeButton) {
+    const likeImage = likeButton.querySelector('img');
+    if (isLiked) {
+      likeImage.src = './assets/images/like-active.svg'; 
+    } else {
+      likeImage.src = './assets/images/like-not-active.svg'; 
+    }
+    likeButton.dataset.liked = isLiked ? 'true' : 'false'; 
   }
 }

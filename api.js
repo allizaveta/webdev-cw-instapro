@@ -1,4 +1,3 @@
-
 import { getToken } from "./index.js";
 import { getUserFromLocalStorage } from "./helpers.js";
 const personalKey = "elizaveta-aleksandrova";
@@ -97,53 +96,6 @@ export function getUserPosts({id}) {
   });
 }
 
-export function like(postId) {
-  const token = getToken();
-  const url = `${postsHost}/${postId}/like`;
-  const data = { userId: getUserId(), username: getUsername() };
-
-  const options = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: token,
-    },
-    body: JSON.stringify(data),
-  };
-
-  return fetch(url, options)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error('Failed to like the post');
-      }
-      return response.json();
-    })
-    .then((data) => {
-      return data.post;
-    });
-}
-
-export function unlikePost(postId) {
-  const token = getToken();
-  const url = `${postsHost}/${postId}/like`;
-  const userId = getUserId();
-  const options = {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: token,
-    },
-    body: JSON.stringify({ userId }),
-  };
-
-  return fetch(url, options)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error('Failed to remove the like');
-      }
-    });
-}
-
 export function getUserId() {
   const user = getUserFromLocalStorage(); 
   if (user) {
@@ -158,3 +110,42 @@ export function getUsername() {
   const user = JSON.parse(userString);
   return user ? user.username : null;
 }
+
+export const getLike = (id, { token }) => {
+  return fetch(`${postsHost}/${id}/like`, {
+    method: "POST",
+    headers: {
+      Authorization: token,
+    }
+  })
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      }
+      throw new Error(`Нет авторизации`);
+    })
+    .catch((error) => {
+      alert('Вы не авторизованы!')
+      throw error;
+    });
+
+};
+
+export const getDislike = (id, { token }) => {
+  return fetch(`${postsHost}/${id}/dislike`, {
+    method: "POST",
+    headers: {
+      Authorization: token,
+    }
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Ошибка ${response.status}: ${response.statusText}`);
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      console.error("Ошибка при удалении лайка:", error);
+      throw error;
+    });
+};

@@ -23,27 +23,35 @@ export const escapeHTML = (htmlString) => {
 };
 
 
-import { like, unlikePost } from './api.js';
+import { getLike, getDislike } from './api.js';
+import { getToken } from './index.js';
 
 export function handleLike(postId, isLiked) {
+  const token = getToken(); // Получаем токен пользователя
   if (isLiked) {
-    unlikePost(postId)
+    return getDislike(postId, { token }) // Передаем токен в getDislike
       .then((post) => {
-        updatePostLikes(postId, post.likes);
+        console.log('удаляю');
+        return post;
       })
       .catch((error) => {
         console.error('Ошибка при дизлайке:', error);
+        throw error; 
       });
   } else {
-    like(postId)
+    return getLike(postId, { token }) // Передаем токен в getLike
       .then((post) => {
-        updatePostLikes(postId, post.likes);
+        console.log('лайкаю')
+        return post;
       })
       .catch((error) => {
         console.error('Ошибка при лайке:', error);
+        throw error; 
       });
   }
 }
+
+
 
 function updatePostLikes(postId, likes) {
   const postElement = document.getElementById(postId);

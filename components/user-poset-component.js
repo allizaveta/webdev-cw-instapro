@@ -3,6 +3,7 @@ import { renderHeaderComponent } from "./header-component.js";
 import { goToPage } from "../index.js";
 import { escapeHTML } from "../helpers.js";
 
+const userView = USER_POSTS_PAGE;
 export function renderUserPageComponent({ appEl, posts }) {
     // Функция для отображения имени и фото пользователя
     const renderUserInfo = (user) => {
