@@ -6,7 +6,7 @@
   export function renderPostsPageComponent({ appEl, posts }) {
     const renderPost = (post) => {
       const isLiked = post.isLiked ? 'true' : 'false'; 
-      const likesCount = post.likes.length; // Количество лайков
+      const likesCount = post.likes.length;
   
       let likesText = "Нравится:";
       if (likesCount === 0) {
@@ -62,13 +62,12 @@
       </div>`;
 
     appEl.innerHTML = appHtml;
-
+    
     renderHeaderComponent({
       element: appEl.querySelector(".header-container"),
     });
-
     // Обработчики событий для клика по кнопке лайка
-  const likesButtons = appEl.querySelectorAll('.like-button');
+    const likesButtons = appEl.querySelectorAll('.like-button');
     likesButtons.forEach((button) => {
       button.addEventListener("click", (event) => {
         event.stopPropagation();
@@ -85,6 +84,7 @@
           });
       });
     });
+
     appEl.querySelectorAll(".post-header").forEach((postHeaderElement) => {
       const userId = postHeaderElement.dataset.userId; 
       handlePostHeaderClick(postHeaderElement, userId); 

@@ -136,4 +136,9 @@ const renderApp = () => {
   }
 };
 
+export function setPosts(newPosts) {
+  posts = newPosts;
+}
+
+
 goToPage(POSTS_PAGE);

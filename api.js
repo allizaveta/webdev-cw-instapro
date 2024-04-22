@@ -149,3 +149,23 @@ export const getDislike = (id, { token }) => {
       throw error;
     });
 };
+
+export function getPostsWithToken() {
+  const token = getToken();
+  return fetch(postsHost, {
+    method: "GET",
+    headers: {
+      Authorization: token,
+    },
+  })
+    .then((response) => {
+      if (response.status === 401) {
+        throw new Error("Нет авторизации");
+      }
+
+      return response.json();
+    })
+    .then((data) => {
+      return data.posts;
+    });
+}

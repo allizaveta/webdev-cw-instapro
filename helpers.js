@@ -1,3 +1,7 @@
+
+import { getLike, getDislike,getPostsWithToken } from './api.js';
+import { getToken,setPosts } from './index.js';
+
 export function saveUserToLocalStorage(user) {
   window.localStorage.setItem("user", JSON.stringify(user));
 }
@@ -22,14 +26,10 @@ export const escapeHTML = (htmlString) => {
     "&gt;", ">", "&amp;", "&", '&quot;', "");
 };
 
-
-import { getLike, getDislike } from './api.js';
-import { getToken } from './index.js';
-
 export function handleLike(postId, isLiked) {
-  const token = getToken(); // Получаем токен пользователя
+  const token = getToken();
   if (isLiked) {
-    return getDislike(postId, { token }) // Передаем токен в getDislike
+    return getDislike(postId, { token })
       .then((post) => {
         console.log('удаляю');
         return post;
@@ -39,26 +39,20 @@ export function handleLike(postId, isLiked) {
         throw error; 
       });
   } else {
-    return getLike(postId, { token }) // Передаем токен в getLike
+    return getLike(postId, { token })
       .then((post) => {
-        console.log('лайкаю')
+        console.log('лайкаю');
         return post;
+      })
+      .then(() => {
+        return getPostsWithToken(); // Получаем новый список постов с токеном
+      })
+      .then((newPosts) => {
+        setPosts(newPosts); // Обновляем список постов
       })
       .catch((error) => {
         console.error('Ошибка при лайке:', error);
         throw error; 
       });
-  }
-}
-
-
-
-function updatePostLikes(postId, likes) {
-  const postElement = document.getElementById(postId);
-  if (postElement) {
-    const likesCountElement = postElement.querySelector('.post-likes-text strong');
-    if (likesCountElement) {
-      likesCountElement.textContent = likes.length.toString();
-    }
   }
 }
