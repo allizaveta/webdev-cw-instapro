@@ -8,7 +8,7 @@ export function renderPostsPageComponent({ appEl, posts }) {
   const renderPost = (post) => {
     const isLiked = post.isLiked ? 'true' : 'false';
     const likesCount = post.likes ? post.likes.length : 0;
-
+  
     let likesText = "Нравится:";
     if (likesCount === 0) {
       likesText += " 0";
@@ -17,7 +17,7 @@ export function renderPostsPageComponent({ appEl, posts }) {
     } else {
       likesText += ` ${escapeHTML(post.likes[0].name)} и еще ${likesCount - 1}`;
     }
-
+  
     const postHtml = `
       <li class="post">
         <div class="post-header" data-user-id="${post.user.id}">
@@ -46,6 +46,7 @@ export function renderPostsPageComponent({ appEl, posts }) {
     `;
     return postHtml;
   };
+  
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
