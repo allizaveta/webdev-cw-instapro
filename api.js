@@ -147,6 +147,7 @@ export const getDislike = (id, { token }) => {
     })
     .catch((error) => {
       console.error("Ошибка при удалении лайка:", error);
+      alert('Что-то пошло не так, попробуйте позже.')
       throw error;
     });
 };
