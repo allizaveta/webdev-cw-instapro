@@ -20,10 +20,10 @@ export function removeUserFromLocalStorage(user) {
 
 export const escapeHTML = (htmlString) => {
   return htmlString
-    .replaceAll("<", "&lt;", 
-    ">", "&gt;", "&", "&amp;", 
-    '"', "&quot;", "&lt;", "<", 
-    "&gt;", ">", "&amp;", "&", '&quot;', "");
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
 };
 
 export function handleLike(postId, isLiked) {
