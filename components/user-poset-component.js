@@ -1,4 +1,3 @@
-import { USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
 import { updateLikeButton } from "./posts-page-component.js";
 import { handleLike, escapeHTML } from "../helpers.js";
@@ -17,6 +16,16 @@ export function renderUserPageComponent({ appEl, posts }) {
 
   const renderPost = (post) => {
     const isLiked = post.isLiked ? 'true' : 'false'; 
+    const likesCount = post.likes.length;
+
+    let likesText = "Нравится:";
+    if (likesCount === 0) {
+      likesText += " 0";
+    } else if (likesCount === 1) {
+      likesText += ` ${escapeHTML(post.likes[0].name)}`;
+    } else {
+      likesText += ` ${escapeHTML(post.likes[0].name)} и еще ${likesCount - 1}`;
+    }
     const postHtml = `
       <li class="post">
         <div class="post-header" data-user-id="${post.user.id}">
@@ -32,8 +41,9 @@ export function renderUserPageComponent({ appEl, posts }) {
           ${formatDate(post.createdAt)}
         </p>
         <div class="post-likes">
-          <button data-post-id="${post.id}" data-liked="${isLiked}" class="like-button">
-            <img src="./assets/images/${post.isLiked ? 'like-active' : 'like-not-active'}.svg">
+          <button data-post-id="${post.id}" data-liked="${post.isLiked}"     class="like-button">
+            <img style="${post.isLiked === false ? "display: block" : "display: none"}" src="./assets/images/like-not-active.svg">
+            <img style="${post.isLiked === true ? "display: block" : "display: none"}" src="./assets/images/like-active.svg">
           </button>
           <p class="post-likes-text">
             Нравится: <strong>${post.likes}</strong>
@@ -43,14 +53,14 @@ export function renderUserPageComponent({ appEl, posts }) {
     `;
     return postHtml;
   };
-
+  
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const now = new Date();
     const diffInMs = now - date;
     return `${Math.round(diffInMs / (1000 * 60))} минут назад`;
   };
-
+  
   const appHtml = `
     <div class="page-container">
       <div class="header-container"></div>
@@ -61,25 +71,27 @@ export function renderUserPageComponent({ appEl, posts }) {
     </div>`;
 
   appEl.innerHTML = appHtml;
-
   renderHeaderComponent({
     element: appEl.querySelector(".header-container"),
   });
 
-  const likesButtons = appEl.querySelectorAll('.like-button');
-  likesButtons.forEach((button) => {
-    button.addEventListener("click", async (event) => {
-      event.preventDefault();
+    // Обработчики событий для клика по кнопке лайка
+    const likesButtons = appEl.querySelectorAll('.like-button');
+    likesButtons.forEach((button) => {
+      button.addEventListener("click", (event) => {
+        event.stopPropagation();
+  
+        const id = button.dataset.postId;
+        const isLiked = button.dataset.liked === 'true'; 
+  
+        handleLike(id, isLiked)
+          .then((updatedPost) => {
+            updateLikeButton(id, isLiked);
+          })
+          .catch((error) => {
+            console.error("Ошибка при обработке лайка:", error);
+          });
+        });
+      });
+};
 
-      const id = button.dataset.postId;
-      const isLiked = button.dataset.liked === 'true'; 
-
-      try {
-        const updatedPost = await handleLike(id, isLiked);
-        updateLikeButton(id, updatedPost.isLiked);
-      } catch (error) {
-        console.error("Ошибка при обработке лайка:", error);
-      }
-    });
-  });
-}
