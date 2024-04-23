@@ -102,12 +102,11 @@ export function updateLikeButton(postId, isLiked) {
   const likeButton = document.querySelector(`[data-post-id="${postId}"]`);
   if (likeButton) {
     const likeImage = likeButton.querySelector('img');
-    if (isLiked) {
+    if (!isLiked) {
       likeImage.src = './assets/images/like-active.svg'; 
     } else {
       likeImage.src = './assets/images/like-not-active.svg'; 
     }
-    likeButton.dataset.liked = isLiked ? 'true' : 'false'; 
   }
 }
 
