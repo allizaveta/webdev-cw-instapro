@@ -119,12 +119,12 @@ export const getLike = (id, { token }) => {
       Authorization: token,
     }
   })
-    .then((response) => {
-      if (response.ok) {
-        return response.json();
-      }
-      throw new Error(`Нет авторизации`);
-    })
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error(`Ошибка ${response.status}: ${response.statusText}`);
+    }
+    return response.json();
+  })
     .catch((error) => {
       alert('Вы не авторизованы!')
       throw error;

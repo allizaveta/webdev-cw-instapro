@@ -1,12 +1,13 @@
 import { USER_POSTS_PAGE, POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
-import { goToPage } from "../index.js";
+import { goToPage, setPosts } from "../index.js";
 import { escapeHTML, handleLike } from "../helpers.js";
+import { getPostsWithToken } from "../api.js";
 
 export function renderPostsPageComponent({ appEl, posts }) {
   const renderPost = (post) => {
     const isLiked = post.isLiked ? 'true' : 'false';
-    const likesCount = post.likes.length;
+    const likesCount = post.likes ? post.likes.length : 0;
 
     let likesText = "Нравится:";
     if (likesCount === 0) {
@@ -66,32 +67,35 @@ export function renderPostsPageComponent({ appEl, posts }) {
   renderHeaderComponent({
     element: appEl.querySelector(".header-container"),
   });
-// Обработчики событий для клика по кнопке лайка
-const likesButtons = appEl.querySelectorAll('.like-button');
-likesButtons.forEach((button) => {
-  button.addEventListener("click", (event) => {
-    event.stopPropagation();
 
-    const id = button.dataset.postId;
-    const isLiked = button.dataset.liked === 'true'; 
+  // Обработчики событий для клика по кнопке лайка
+  const likesButtons = appEl.querySelectorAll('.like-button');
+  likesButtons.forEach((button) => {
+    button.addEventListener("click", (event) => {
+      event.stopPropagation();
 
-    handleLike(id, isLiked)
-      .then((updatedPost) => {
-        updateLikeButton(id, updatedPost.isLiked);
-      })
-      .catch((error) => {
-        console.error("Ошибка при обработке лайка:", error);
-      });
+      const id = button.dataset.postId;
+      const isLiked = button.dataset.liked === 'true'; 
+
+      handleLike(id, isLiked)
+        .then(() => {
+          return getPostsWithToken(); 
+        })
+        .then((newPosts) => {
+          setPosts(newPosts);
+        })
+        .catch((error) => {
+          console.error('Ошибка при обработке лайка:', error);
+        });
+    });
   });
-});
-
 
   appEl.querySelectorAll(".post-header").forEach((postHeaderElement) => {
     const userId = postHeaderElement.dataset.userId; 
     handlePostHeaderClick(postHeaderElement, userId); 
   });
-
 }
+
 
 export function updateLikeButton(postId, isLiked) {
   const likeButton = document.querySelector(`[data-post-id="${postId}"]`);

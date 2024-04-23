@@ -1,6 +1,8 @@
 
-import { getLike, getDislike } from './api.js';
-import { getToken,setPosts } from './index.js';
+import { getLike, getDislike, getPostsWithToken } from './api.js';
+import { getToken, setPosts } from './index.js';
+import { updateLikeButton } from './components/posts-page-component.js';
+
 
 export function saveUserToLocalStorage(user) {
   window.localStorage.setItem("user", JSON.stringify(user));
@@ -57,6 +59,13 @@ export function handleLike(postId, isLiked) {
           likeButton.dataset.liked = 'true'; 
         }
         return post;
+      })
+      .then(() => {
+        return getPostsWithToken(); 
+      })
+      .then((newPosts) => {
+        setPosts(newPosts); 
+        updateLikeButton(postId, true);
       })
       .catch((error) => {
         console.error('Ошибка при лайке:', error);
