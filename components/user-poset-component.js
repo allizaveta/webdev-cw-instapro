@@ -41,12 +41,11 @@ export function renderUserPageComponent({ appEl, posts }) {
           ${formatDate(post.createdAt)}
         </p>
         <div class="post-likes">
-          <button data-post-id="${post.id}" data-liked="${post.isLiked}"     class="like-button">
-            <img style="${post.isLiked === false ? "display: block" : "display: none"}" src="./assets/images/like-not-active.svg">
-            <img style="${post.isLiked === true ? "display: block" : "display: none"}" src="./assets/images/like-active.svg">
+          <button data-post-id="${post.id}" data-liked="${isLiked}" class="like-button">
+            <img src="./assets/images/${post.isLiked ? 'like-active' : 'like-not-active'}.svg">
           </button>
           <p class="post-likes-text">
-            Нравится: <strong>${post.likes}</strong>
+            ${likesText}
           </p>
         </div>
       </li>
