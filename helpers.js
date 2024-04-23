@@ -1,5 +1,5 @@
 
-import { getLike, getDislike,getPostsWithToken } from './api.js';
+import { getLike, getDislike } from './api.js';
 import { getToken,setPosts } from './index.js';
 
 export function saveUserToLocalStorage(user) {
@@ -34,6 +34,12 @@ export function handleLike(postId, isLiked) {
     return getDislike(postId, { token })
       .then((post) => {
         console.log('удаляю');
+        const likeButton = document.querySelector(`[data-post-id="${postId}"]`);
+        if (likeButton) {
+          const likeImage = likeButton.querySelector('img');
+          likeImage.src = './assets/images/like-not-active.svg'; 
+          likeButton.dataset.liked = 'false'; 
+        }
         return post;
       })
       .catch((error) => {
@@ -44,13 +50,13 @@ export function handleLike(postId, isLiked) {
     return getLike(postId, { token })
       .then((post) => {
         console.log('лайкаю');
+        const likeButton = document.querySelector(`[data-post-id="${postId}"]`);
+        if (likeButton) {
+          const likeImage = likeButton.querySelector('img');
+          likeImage.src = './assets/images/like-active.svg'; 
+          likeButton.dataset.liked = 'true'; 
+        }
         return post;
-      })
-      .then(() => {
-        return getPostsWithToken(); // Получаем новый список постов с токеном
-      })
-      .then((newPosts) => {
-        setPosts(newPosts); // Обновляем список постов
       })
       .catch((error) => {
         console.error('Ошибка при лайке:', error);

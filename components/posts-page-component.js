@@ -66,24 +66,25 @@ export function renderPostsPageComponent({ appEl, posts }) {
   renderHeaderComponent({
     element: appEl.querySelector(".header-container"),
   });
-  // Обработчики событий для клика по кнопке лайка
-  const likesButtons = appEl.querySelectorAll('.like-button');
-  likesButtons.forEach((button) => {
-    button.addEventListener("click", (event) => {
-      event.stopPropagation();
+// Обработчики событий для клика по кнопке лайка
+const likesButtons = appEl.querySelectorAll('.like-button');
+likesButtons.forEach((button) => {
+  button.addEventListener("click", (event) => {
+    event.stopPropagation();
 
-      const id = button.dataset.postId;
-      const isLiked = button.dataset.liked === 'true'; 
+    const id = button.dataset.postId;
+    const isLiked = button.dataset.liked === 'true'; 
 
-      handleLike(id, isLiked)
-        .then((updatedPost) => {
-          updateLikeButton(id, isLiked);
-        })
-        .catch((error) => {
-          console.error("Ошибка при обработке лайка:", error);
-        });
-    });
+    handleLike(id, isLiked)
+      .then((updatedPost) => {
+        updateLikeButton(id, updatedPost.isLiked);
+      })
+      .catch((error) => {
+        console.error("Ошибка при обработке лайка:", error);
+      });
   });
+});
+
 
   appEl.querySelectorAll(".post-header").forEach((postHeaderElement) => {
     const userId = postHeaderElement.dataset.userId; 
