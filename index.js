@@ -1,5 +1,5 @@
 import { getPosts, getUserPosts } from "./api.js";
-import { renderUserPageComponent } from "./components/user-poset-component.js";
+import { renderUserPageComponent } from "./components/user-post-component.js";
 import { renderAddPostPageComponent } from "./components/add-post-page-component.js";
 import { renderAuthPageComponent } from "./components/auth-page-component.js";
 import {
