@@ -1,5 +1,5 @@
 import { renderHeaderComponent } from "./header-component.js";
-import { updateLikeButton } from "./posts-page-component.js";
+import { updateLikeButton, initLikeButtonListener } from "./posts-page-component.js";
 import { handleLike, escapeHTML } from "../helpers.js";
 
 
@@ -73,21 +73,6 @@ export function renderUserPageComponent({ appEl, posts }) {
     element: appEl.querySelector(".header-container"),
   });
 
-    // Обработчики событий для клика по кнопке лайка
-    const likesButtons = appEl.querySelectorAll('.like-button');
-    likesButtons.forEach((button) => {
-      button.addEventListener("click", (event) => {
-        event.stopPropagation();
-        const id = button.dataset.postId;
-    const isLiked = button.dataset.liked === 'true';
-  
-        handleLike(id, isLiked)
-          .then((updatedPost) => {
-            updateLikeButton(id, isLiked);
-          })
-          .catch((error) => {
-            console.error("Ошибка при обработке лайка:", error);
-          });
-        });
-      });
+  initLikeButtonListener(appEl, handleLike);
 };
+

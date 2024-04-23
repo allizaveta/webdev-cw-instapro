@@ -68,28 +68,7 @@ export function renderPostsPageComponent({ appEl, posts }) {
   renderHeaderComponent({
     element: appEl.querySelector(".header-container"),
   });
-
-  // Обработчики событий для клика по кнопке лайка
-  const likesButtons = appEl.querySelectorAll('.like-button');
-  likesButtons.forEach((button) => {
-    button.addEventListener("click", (event) => {
-      event.stopPropagation();
-
-      const id = button.dataset.postId;
-      const isLiked = button.dataset.liked === 'true'; 
-
-      handleLike(id, isLiked)
-        .then(() => {
-          return getPostsWithToken(); 
-        })
-        .then((newPosts) => {
-          setPosts(newPosts);
-        })
-        .catch((error) => {
-          console.error('Ошибка при обработке лайка:', error);
-        });
-    });
-  });
+  initLikeButtonListener(appEl, handleLike);
 
   appEl.querySelectorAll(".post-header").forEach((postHeaderElement) => {
     const userId = postHeaderElement.dataset.userId; 
@@ -115,3 +94,22 @@ const handlePostHeaderClick = (postHeaderElement, userId) => {
     goToPage(USER_POSTS_PAGE, { userId }); 
   });
 };
+
+export function initLikeButtonListener(appEl, handleLike) {
+  const likesButtons = appEl.querySelectorAll('.like-button');
+  likesButtons.forEach((button) => {
+    button.addEventListener("click", (event) => {
+      event.stopPropagation();
+      const id = button.dataset.postId;
+      const isLiked = button.dataset.liked === 'true';
+
+      handleLike(id, isLiked)
+        .then((updatedPost) => {
+          updateLikeButton(id, isLiked);
+        })
+        .catch((error) => {
+          console.error("Ошибка при обработке лайка:", error);
+        });
+    });
+  });
+}
