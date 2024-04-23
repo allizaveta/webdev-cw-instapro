@@ -47,13 +47,7 @@ export function renderPostsPageComponent({ appEl, posts }) {
     return postHtml;
   };
   
-
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffInMs = now - date;
-    return `${Math.round(diffInMs / (1000 * 60))} минут назад`;
-  };
+  formatDate();
 
   const appHtml = `
     <div class="page-container">
@@ -113,3 +107,10 @@ export function initLikeButtonListener(appEl, handleLike) {
     });
   });
 }
+
+export const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffInMs = now - date;
+  return `${Math.round(diffInMs / (1000 * 60))} минут назад`;
+};

@@ -1,5 +1,5 @@
 import { renderHeaderComponent } from "./header-component.js";
-import { updateLikeButton, initLikeButtonListener } from "./posts-page-component.js";
+import { formatDate, initLikeButtonListener } from "./posts-page-component.js";
 import { handleLike, escapeHTML } from "../helpers.js";
 
 
@@ -52,12 +52,7 @@ export function renderUserPageComponent({ appEl, posts }) {
   return postHtml;
 };
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffInMs = now - date;
-    return `${Math.round(diffInMs / (1000 * 60))} минут назад`;
-  };
+  formatDate();
   
   const appHtml = `
     <div class="page-container">
