@@ -80,9 +80,8 @@ export function renderUserPageComponent({ appEl, posts }) {
     likesButtons.forEach((button) => {
       button.addEventListener("click", (event) => {
         event.stopPropagation();
-  
         const id = button.dataset.postId;
-        const isLiked = button.dataset.liked === 'true'; 
+    const isLiked = button.dataset.liked === 'true';
   
         handleLike(id, isLiked)
           .then((updatedPost) => {

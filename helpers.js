@@ -27,6 +27,8 @@ export const escapeHTML = (htmlString) => {
 };
 
 export function handleLike(postId, isLiked) {
+  console.log('postId:', postId, 'isLiked:', isLiked);
+  
   const token = getToken();
   if (isLiked) {
     return getDislike(postId, { token })

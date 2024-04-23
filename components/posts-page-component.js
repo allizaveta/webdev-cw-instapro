@@ -5,7 +5,7 @@ import { escapeHTML, handleLike } from "../helpers.js";
 
 export function renderPostsPageComponent({ appEl, posts }) {
   const renderPost = (post) => {
-    const isLiked = post.isLiked ? 'true' : 'false'; 
+    const isLiked = post.isLiked ? 'true' : 'false';
     const likesCount = post.likes.length;
 
     let likesText = "Нравится:";
