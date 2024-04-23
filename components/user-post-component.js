@@ -14,45 +14,44 @@ export function renderUserPageComponent({ appEl, posts }) {
     return userInfoHtml;
   };
 
-  const renderPost = (post) => {
-    const isLiked = post.isLiked ? 'true' : 'false'; 
-    const likesCount = post.likes.length;
+ const renderPost = (post) => {
+  const likesCount = post.likes.length;
 
-    let likesText = "Нравится:";
-    if (likesCount === 0) {
-      likesText += " 0";
-    } else if (likesCount === 1) {
-      likesText += ` ${escapeHTML(post.likes[0].name)}`;
-    } else {
-      likesText += ` ${escapeHTML(post.likes[0].name)} и еще ${likesCount - 1}`;
-    }
-    const postHtml = `
-      <li class="post">
-        <div class="post-header" data-user-id="${post.user.id}">
-          <div class="user-info-container"></div>
-        </div>
-        <div class="post-image-container">
-          <img class="post-image" src="${post.imageUrl}">
-        </div>
-        <div class="post-text">
-          ${escapeHTML(post.description)}
-        </div>
-        <p class="post-date">
-          ${formatDate(post.createdAt)}
+  let likesText = "Нравится:";
+  if (likesCount === 0) {
+    likesText += " 0";
+  } else if (likesCount === 1) {
+    likesText += ` ${escapeHTML(post.likes[0].name)}`;
+  } else {
+    likesText += ` ${escapeHTML(post.likes[0].name)} и еще ${likesCount - 1}`;
+  }
+  const postHtml = `
+    <li class="post">
+      <div class="post-header" data-user-id="${post.user.id}">
+        <div class="user-info-container"></div>
+      </div>
+      <div class="post-image-container">
+        <img class="post-image" src="${post.imageUrl}">
+      </div>
+      <div class="post-text">
+        ${escapeHTML(post.description)}
+      </div>
+      <p class="post-date">
+        ${formatDate(post.createdAt)}
+      </p>
+      <div class="post-likes">
+        <button data-post-id="${post.id}" data-liked="${post.isLiked ? 'true' : 'false'}" class="like-button">
+          <img src="./assets/images/${post.isLiked ? 'like-active' : 'like-not-active'}.svg">
+        </button>
+        <p class="post-likes-text">
+          ${likesText}
         </p>
-        <div class="post-likes">
-          <button data-post-id="${post.id}" data-liked="${isLiked}" class="like-button">
-            <img src="./assets/images/${post.isLiked ? 'like-active' : 'like-not-active'}.svg">
-          </button>
-          <p class="post-likes-text">
-            ${likesText}
-          </p>
-        </div>
-      </li>
-    `;
-    return postHtml;
-  };
-  
+      </div>
+    </li>
+  `;
+  return postHtml;
+};
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const now = new Date();
