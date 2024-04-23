@@ -70,4 +70,3 @@ export function renderUserPageComponent({ appEl, posts }) {
 
   initLikeButtonListener(appEl, handleLike);
 };
-
