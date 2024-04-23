@@ -1,8 +1,7 @@
-import { USER_POSTS_PAGE, POSTS_PAGE } from "../routes.js";
+import { USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
-import { goToPage, setPosts } from "../index.js";
+import { goToPage } from "../index.js";
 import { escapeHTML, handleLike } from "../helpers.js";
-import { getPostsWithToken } from "../api.js";
 
 export function renderPostsPageComponent({ appEl, posts }) {
   const renderPost = (post) => {
